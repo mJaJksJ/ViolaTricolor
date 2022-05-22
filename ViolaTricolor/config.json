@@ -1,0 +1,8 @@
+{
+  "Logger": {
+    "FileName": "ViolaTricolorLog",
+    "LimitFileSize": 134217728,
+    "FilePath": "Logs",
+    "RollingInterval": 3
+  }
+}

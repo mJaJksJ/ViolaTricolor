@@ -5,7 +5,7 @@ namespace ViolaTricolor.Configuration
     /// <summary>
     /// Конфиг логгера
     /// </summary>
-    public class LoggerConfig : IConfig, IMergeable
+    public class LoggerConfig : IConfig
     {
         /// <summary>
         /// Имя файла логгера

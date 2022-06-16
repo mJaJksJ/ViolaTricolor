@@ -2,5 +2,6 @@
 {
     public interface IConfig
     {
+        void MergeWith(IConfig config);
     }
 }

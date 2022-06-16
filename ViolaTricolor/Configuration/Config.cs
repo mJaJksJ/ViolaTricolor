@@ -7,12 +7,14 @@ using System.Text;
 
 namespace ViolaTricolor.Configuration
 {
-    public class Config : IConfig, IMergeable
+    public class Config : IConfig
     {
         /// <summary>
         /// Конфиг логгера
         /// </summary>
         public LoggerConfig Logger { get; set; }
+
+        public VkMonitoringConfig VkMonitoring { get; set; }
 
         private static readonly Serilog.ILogger Log = Serilog.Log.ForContext<Config>();
 
@@ -37,7 +39,8 @@ namespace ViolaTricolor.Configuration
         {
             var config = new Config
             {
-                Logger = new LoggerConfig()
+                Logger = new LoggerConfig(),
+                VkMonitoring = new VkMonitoringConfig()
             };
 
             foreach (var c in configs.Where(_ => _ != null))
@@ -63,7 +66,8 @@ namespace ViolaTricolor.Configuration
             {
                 var config = new Config
                 {
-                    Logger = new LoggerConfig()
+                    Logger = new LoggerConfig(),
+                    VkMonitoring = new VkMonitoringConfig()
                 };
 
                 var json = File.ReadAllText(path, Encoding.UTF8);
@@ -88,6 +92,11 @@ namespace ViolaTricolor.Configuration
                     FilePath = "Logs",
                     LimitFileSize = 128 * 1024 * 1024,
                     RollingInterval = RollingInterval.Day
+                },
+                VkMonitoring = new VkMonitoringConfig
+                {
+                    AutoImport = true,
+                    Interval = new TimeSpan(0, 30, 0)
                 }
             };
         }

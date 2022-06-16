@@ -7,6 +7,7 @@ using Serilog.Events;
 using System.IO;
 using System.Reflection;
 using ViolaTricolor.Configuration;
+using ViolaTricolor.VkMonitoringServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,6 +73,9 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(xmlPath);
 });
 
+builder.Services.AddSingleton(config);
+builder.Services.AddSingleton<IUserMonitoringService, UserMonitoringService>();
+
 var app = builder.Build();
 
 app.UseSerilogRequestLogging();
@@ -93,5 +97,7 @@ app.MapControllerRoute(
     pattern: "{controller}/{action=Index}/{id?}");
 
 app.MapFallbackToFile("index.html"); ;
+
+app.Services.GetRequiredService<IUserMonitoringService>();
 
 app.Run();

@@ -27,6 +27,7 @@ namespace ViolaTricolor.Configuration
         /// </summary>
         public RollingInterval? RollingInterval { get; set; }
 
+        /// <inheritdoc/>
         public void MergeWith(IConfig config)
         {
             var currentConfig = config as LoggerConfig;

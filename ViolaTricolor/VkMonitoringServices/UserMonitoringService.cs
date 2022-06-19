@@ -9,12 +9,13 @@ using VkNet.Model;
 
 namespace ViolaTricolor.VkMonitoringServices
 {
+    /// <inheritdoc cref="IUserMonitoringService"/>
     public class UserMonitoringService : IUserMonitoringService
     {
         private readonly Config _config;
-        private readonly IServiceScopeFactory _scopeFactory;
 
         private readonly VkApi _vkApi;
+        private readonly User _mainUser;
 
         private Timer _timer;
         private static readonly ILogger Log = Serilog.Log.ForContext<UserMonitoringService>();
@@ -23,17 +24,50 @@ namespace ViolaTricolor.VkMonitoringServices
             ? (int)_config.VkMonitoring.Interval.Value.TotalMilliseconds
             :  30 * 60 * 1000;
 
+        /// <summary>
+        /// .ctor
+        /// </summary>
         public UserMonitoringService(
-            Config config,
-            IServiceScopeFactory scopeFactory)
+            Config config)
         {
             _config = config;
-            _scopeFactory = scopeFactory;
             _vkApi = new VkApi();
 
+            if (!string.IsNullOrEmpty(_config.VkMonitoring.VkAppKey))
+            {
+                _vkApi.Authorize(new ApiAuthParams { AccessToken = _config.VkMonitoring.VkAppKey });
+                if (string.IsNullOrEmpty(_vkApi.Token))
+                {
+                    Log.Error("AccessToken didn\'t got");
+                    throw new Exception("Неверный токен");
+                }
+                else
+                {
+                    Log.Error("AccesToken got succesful");
+                }
+
+                _mainUser = _config.VkMonitoring.MainUserId.HasValue
+                    ? _vkApi.Users.Get(new long[] { _config.VkMonitoring.MainUserId.Value }).FirstOrDefault()
+                    : null;
+
+                if(_mainUser != null)
+                {
+                    Log.Information($"Main user ${_mainUser} accessed");
+                }
+                else
+                {
+                    Log.Warning($"Main user not accessed");
+                }
+            }
 
             Start();
         }
+
+        /// <inheritdoc/>
+        public VkApi GetVkApi => _vkApi;
+
+        /// <inheritdoc/>
+        public User GetMainUser => _mainUser;
 
         private void Start()
         {
@@ -49,7 +83,8 @@ namespace ViolaTricolor.VkMonitoringServices
             }
         }
 
-        public void Update()
+        /// <inheritdoc/>
+        public void UpdateAutoImport()
         {
             if (_config.VkMonitoring?.AutoImport != null && _config.VkMonitoring.AutoImport.Value)
             {

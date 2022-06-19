@@ -7,6 +7,7 @@ using System.Text;
 
 namespace ViolaTricolor.Configuration
 {
+    /// <inheritdoc cref="IConfig"/>
     public class Config : IConfig
     {
         /// <summary>
@@ -14,10 +15,17 @@ namespace ViolaTricolor.Configuration
         /// </summary>
         public LoggerConfig Logger { get; set; }
 
+        /// <summary>
+        /// Конфиг мониторинга Вк
+        /// </summary>
         public VkMonitoringConfig VkMonitoring { get; set; }
 
-        private static readonly Serilog.ILogger Log = Serilog.Log.ForContext<Config>();
+        private static readonly ILogger Log = Serilog.Log.ForContext<Config>();
 
+        /// <summary>
+        /// Загрузить конфигурацию
+        /// </summary>
+        /// <returns></returns>
         public static Config Load()
         {
             var config = MergeConfigs(
@@ -29,10 +37,12 @@ namespace ViolaTricolor.Configuration
             return config;
         }
 
+        /// <inheritdoc/>
         public void MergeWith(IConfig config)
         {
             var currentConfig = config as Config;
             Logger.MergeWith(currentConfig.Logger);
+            VkMonitoring.MergeWith(currentConfig.VkMonitoring);
         }
 
         private static Config MergeConfigs(params Config[] configs)
@@ -96,7 +106,9 @@ namespace ViolaTricolor.Configuration
                 VkMonitoring = new VkMonitoringConfig
                 {
                     AutoImport = true,
-                    Interval = new TimeSpan(0, 30, 0)
+                    Interval = new TimeSpan(0, 30, 0),
+                    VkAppKey = "",
+                    MainUserId = null
                 }
             };
         }

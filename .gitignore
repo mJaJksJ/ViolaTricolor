@@ -351,3 +351,9 @@ MigrationBackup/
 
 # Local files
 *.local.*
+
+# Rider IDE
+.idea/.idea.ViolaTricolor/.idea/.gitignore
+.idea/.idea.ViolaTricolor/.idea/encodings.xml
+.idea/.idea.ViolaTricolor/.idea/indexLayout.xml
+.idea/.idea.ViolaTricolor/.idea/vcs.xml

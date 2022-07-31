@@ -1,7 +1,4 @@
-﻿using VkNet;
-using VkNet.Model;
-
-namespace ViolaTricolor.VkMonitoringServices
+﻿namespace ViolaTricolor.VkMonitoringServices
 {
     /// <summary>
     /// Сервис запуска мониторинга
@@ -14,13 +11,8 @@ namespace ViolaTricolor.VkMonitoringServices
         void UpdateAutoImport();
 
         /// <summary>
-        /// Получить контекст вк-апи
+        /// Запуск сервиса
         /// </summary>
-        VkApi GetVkApi { get; }
-
-        /// <summary>
-        /// Получить основного пользователя
-        /// </summary>
-        User GetMainUser { get; }
+        void Start();
     }
 }

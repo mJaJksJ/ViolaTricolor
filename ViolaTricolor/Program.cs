@@ -7,6 +7,8 @@ using Serilog.Events;
 using System.IO;
 using System.Reflection;
 using ViolaTricolor.Configuration;
+using ViolaTricolor.Services.AuthService;
+using ViolaTricolor.Services.VkMonitoringServices.FriendsListUpdateService;
 using ViolaTricolor.VkMonitoringServices;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -73,8 +75,14 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(xmlPath);
 });
 
+#region services
+
 builder.Services.AddSingleton(config);
+builder.Services.AddSingleton<IVkAuthService, VkAuthService>();
+builder.Services.AddSingleton<IFriendsListUpdateService, FriendsListUpdateService>();
 builder.Services.AddSingleton<IUserMonitoringService, UserMonitoringService>();
+
+#endregion services
 
 var app = builder.Build();
 
@@ -98,6 +106,7 @@ app.MapControllerRoute(
 
 app.MapFallbackToFile("index.html"); ;
 
-app.Services.GetRequiredService<IUserMonitoringService>();
+app.Services.GetRequiredService<IVkAuthService>();
+app.Services.GetRequiredService<IUserMonitoringService>().Start();
 
 app.Run();

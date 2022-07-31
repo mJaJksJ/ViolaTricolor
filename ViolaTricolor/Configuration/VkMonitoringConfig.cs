@@ -20,7 +20,7 @@ namespace ViolaTricolor.Configuration
         /// <summary>
         /// Ключ приложения Вк
         /// </summary>
-        public string VkAppKey { get; set; }
+        public string ServiceAccessKey { get; set; }
 
         /// <summary>
         /// Id основного пользователя
@@ -33,7 +33,7 @@ namespace ViolaTricolor.Configuration
             var currentConfig = config as VkMonitoringConfig;
             AutoImport = currentConfig.AutoImport.HasValue ? currentConfig.AutoImport : AutoImport;
             Interval = currentConfig.Interval.HasValue ? currentConfig.Interval : Interval;
-            VkAppKey = !string.IsNullOrEmpty(currentConfig.VkAppKey) ? currentConfig.VkAppKey : VkAppKey;
+            ServiceAccessKey = !string.IsNullOrEmpty(currentConfig.ServiceAccessKey) ? currentConfig.ServiceAccessKey : ServiceAccessKey;
             MainUserId = currentConfig.MainUserId.HasValue ? currentConfig.MainUserId : MainUserId;
         }
     }

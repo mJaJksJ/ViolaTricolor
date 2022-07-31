@@ -106,8 +106,8 @@ namespace ViolaTricolor.Configuration
                 VkMonitoring = new VkMonitoringConfig
                 {
                     AutoImport = true,
-                    Interval = new TimeSpan(0, 30, 0),
-                    VkAppKey = "",
+                    Interval = new TimeSpan(0, 0, 30),
+                    ServiceAccessKey = "",
                     MainUserId = null
                 }
             };

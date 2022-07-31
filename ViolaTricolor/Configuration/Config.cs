@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
-using Serilog;
 using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
+using Serilog;
 
 namespace ViolaTricolor.Configuration
 {

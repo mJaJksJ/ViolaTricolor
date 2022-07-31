@@ -1,4 +1,4 @@
-﻿using Serilog;
+using Serilog;
 
 namespace ViolaTricolor.Configuration
 {
@@ -23,7 +23,7 @@ namespace ViolaTricolor.Configuration
         public string FilePath { get; set; }
 
         /// <summary>
-        /// Интервал создания новых файлов 
+        /// Интервал создания новых файлов
         /// </summary>
         public RollingInterval? RollingInterval { get; set; }
 

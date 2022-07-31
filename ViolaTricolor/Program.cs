@@ -1,11 +1,11 @@
+using System.IO;
+using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
-using System.IO;
-using System.Reflection;
 using ViolaTricolor.Configuration;
 using ViolaTricolor.Services.AuthService;
 using ViolaTricolor.Services.VkMonitoringServices.FriendsListUpdateService;
@@ -104,7 +104,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action=Index}/{id?}");
 
-app.MapFallbackToFile("index.html"); ;
+app.MapFallbackToFile("index.html");
 
 app.Services.GetRequiredService<IVkAuthService>();
 app.Services.GetRequiredService<IUserMonitoringService>().Start();

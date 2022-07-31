@@ -1,6 +1,6 @@
-﻿using Serilog;
 using System;
 using System.Linq;
+using Serilog;
 using ViolaTricolor.Configuration;
 using VkNet;
 using VkNet.Model;
@@ -11,8 +11,12 @@ namespace ViolaTricolor.Services.AuthService
     public class VkAuthService : IVkAuthService
     {
         private readonly Config _config;
-        private readonly VkApi _vkApi;
-        private readonly User _mainUser;
+
+        /// <inheritdoc/>
+        public VkApi GetVkApi { get; private set; }
+
+        /// <inheritdoc/>
+        public User GetMainUser { get; private set; }
 
         /// <summary>
         /// .ctor
@@ -21,13 +25,13 @@ namespace ViolaTricolor.Services.AuthService
         {
             // TODO: Привести логи к единому стилю
             _config = config;
-            _vkApi = new VkApi();
-            _vkApi.SetLanguage(VkNet.Enums.Language.Ru);
+            GetVkApi = new VkApi();
+            GetVkApi.SetLanguage(VkNet.Enums.Language.Ru);
 
             if (!string.IsNullOrEmpty(_config.VkMonitoring.ServiceAccessKey))
             {
-                _vkApi.Authorize(new ApiAuthParams { AccessToken = _config.VkMonitoring.ServiceAccessKey });
-                if (string.IsNullOrEmpty(_vkApi.Token))
+                GetVkApi.Authorize(new ApiAuthParams { AccessToken = _config.VkMonitoring.ServiceAccessKey });
+                if (string.IsNullOrEmpty(GetVkApi.Token))
                 {
                     Log.Error("AccessToken didn\'t got");
                     throw new Exception("Неверный токен");
@@ -37,13 +41,13 @@ namespace ViolaTricolor.Services.AuthService
                     Log.Information("AccesToken got succesful");
                 }
 
-                _mainUser = _config.VkMonitoring.MainUserId.HasValue
-                    ? _vkApi.Users.Get(new long[] { _config.VkMonitoring.MainUserId.Value }).FirstOrDefault()
+                GetMainUser = _config.VkMonitoring.MainUserId.HasValue
+                    ? GetVkApi.Users.Get(new long[] { _config.VkMonitoring.MainUserId.Value }).FirstOrDefault()
                     : null;
 
-                if (_mainUser != null)
+                if (GetMainUser != null)
                 {
-                    Log.Information($"Main user ${_mainUser.Id} accessed");
+                    Log.Information($"Main user ${GetMainUser.Id} accessed");
                 }
                 else
                 {
@@ -55,11 +59,5 @@ namespace ViolaTricolor.Services.AuthService
                 Log.Error("Auth failed: service access key is empty");
             }
         }
-
-        /// <inheritdoc/>
-        public VkApi GetVkApi => _vkApi;
-
-        /// <inheritdoc/>
-        public User GetMainUser => _mainUser;
     }
 }

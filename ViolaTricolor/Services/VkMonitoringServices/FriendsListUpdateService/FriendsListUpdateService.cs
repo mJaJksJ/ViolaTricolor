@@ -1,10 +1,10 @@
-﻿using ViolaTricolor.Services.AuthService;
+using ViolaTricolor.Services.AuthService;
 using VkNet.Enums.Filters;
 using VkNet.Model.RequestParams;
 
 namespace ViolaTricolor.Services.VkMonitoringServices.FriendsListUpdateService
 {
-    /// <inheritdoc cref="IFriendsListUpdateService"/> 
+    /// <inheritdoc cref="IFriendsListUpdateService"/>
     public class FriendsListUpdateService : IFriendsListUpdateService
     {
         private readonly IVkAuthService _vkAuthService;

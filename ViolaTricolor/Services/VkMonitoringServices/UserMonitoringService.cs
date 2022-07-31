@@ -1,13 +1,13 @@
-﻿using Serilog;
 using System;
 using System.Threading;
+using Serilog;
 using ViolaTricolor.Configuration;
 using ViolaTricolor.Services.VkMonitoringServices.FriendsListUpdateService;
 
 namespace ViolaTricolor.VkMonitoringServices
 {
     /// <inheritdoc cref="IUserMonitoringService"/>
-    public class UserMonitoringService : IUserMonitoringService
+    public class UserMonitoringService : IUserMonitoringService, IDisposable
     {
         private readonly Config _config;
         private readonly IFriendsListUpdateService _friendsListUpdateService;
@@ -71,6 +71,25 @@ namespace ViolaTricolor.VkMonitoringServices
         private void RunMonitoring()
         {
             _friendsListUpdateService.CheckFriendsList();
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// The bulk of the clean-up code
+        /// </summary>
+        /// <param name="disposing">Dispose if true</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _timer.Dispose();
+            }
         }
     }
 }

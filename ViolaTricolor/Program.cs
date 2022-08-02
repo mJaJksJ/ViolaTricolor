@@ -1,12 +1,14 @@
 using System.IO;
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
 using ViolaTricolor.Configuration;
+using ViolaTricolor.Database;
 using ViolaTricolor.Services.AuthService;
 using ViolaTricolor.Services.VkMonitoringServices.FriendsListUpdateService;
 using ViolaTricolor.VkMonitoringServices;
@@ -22,6 +24,23 @@ Log.Logger = new LoggerConfiguration()
 var log = Log.ForContext<Program>();
 
 var config = Config.Load();
+
+#region db
+
+var connectionString = config.DbFileName;
+
+if (!File.Exists(connectionString))
+{
+    File.Create(connectionString).Close();
+}
+
+DatabaseContext.ConnectionString = $"DataSource={connectionString}";
+
+var dbContext = new DatabaseContext();
+
+dbContext.Database.Migrate();
+
+#endregion db
 
 #region serilog configuration
 
@@ -78,6 +97,7 @@ builder.Services.AddSwaggerGen(c =>
 #region services
 
 builder.Services.AddSingleton(config);
+builder.Services.AddSingleton(dbContext);
 builder.Services.AddSingleton<IVkAuthService, VkAuthService>();
 builder.Services.AddSingleton<IFriendsListUpdateService, FriendsListUpdateService>();
 builder.Services.AddSingleton<IUserMonitoringService, UserMonitoringService>();

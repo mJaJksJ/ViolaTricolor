@@ -352,6 +352,9 @@ MigrationBackup/
 # Local files
 *.local.*
 
+# Database
+*.db
+
 # Rider IDE
 .idea/.idea.ViolaTricolor/.idea/.gitignore
 .idea/.idea.ViolaTricolor/.idea/encodings.xml

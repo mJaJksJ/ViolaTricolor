@@ -20,6 +20,11 @@ namespace ViolaTricolor.Configuration
         /// </summary>
         public VkMonitoringConfig VkMonitoring { get; set; }
 
+        /// <summary>
+        /// Файл бд
+        /// </summary>
+        public string DbFileName { get; set; }
+
         private static readonly ILogger Log = Serilog.Log.ForContext<Config>();
 
         /// <summary>
@@ -29,8 +34,8 @@ namespace ViolaTricolor.Configuration
         public static Config Load()
         {
             var config = MergeConfigs(
-                LoadFromJson("config.json"),
-                LoadFromJson("config.local.json"),
+                LoadFromJson(Path.Combine(Directories.ConfigDirectory, "config.json")),
+                LoadFromJson(Path.Combine(Directories.ConfigDirectory, "config.local.json")),
                 CreateDefaultConfig()
             );
 
@@ -43,6 +48,7 @@ namespace ViolaTricolor.Configuration
             var currentConfig = config as Config;
             Logger.MergeWith(currentConfig.Logger);
             VkMonitoring.MergeWith(currentConfig.VkMonitoring);
+            DbFileName = !string.IsNullOrEmpty(currentConfig.DbFileName) ? currentConfig.DbFileName : DbFileName;
         }
 
         private static Config MergeConfigs(params Config[] configs)
@@ -109,7 +115,8 @@ namespace ViolaTricolor.Configuration
                     Interval = new TimeSpan(0, 0, 30),
                     ServiceAccessKey = "",
                     MainUserId = null
-                }
+                },
+                DbFileName = "ViolaTricolor.db"
             };
         }
     }

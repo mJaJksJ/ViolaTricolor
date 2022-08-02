@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
 namespace ViolaTricolor.Database.Entities
@@ -23,6 +24,11 @@ namespace ViolaTricolor.Database.Entities
         public string Password { get; set; }
 
         /// <summary>
+        /// Vk пользователи на слежение за которыми подписанн VT пользователем
+        /// </summary>
+        public IEnumerable<VkUser> VkUsers { get; set; }
+
+        /// <summary>
         /// Настройки
         /// </summary>
         public static void Setup(ModelBuilder modelBuilder)
@@ -34,6 +40,9 @@ namespace ViolaTricolor.Database.Entities
             entity.Property(u => u.Login).IsRequired();
             entity.Property(u => u.Login).IsRequired();
             entity.HasIndex(u => u.Login).IsUnique();
+
+            entity.HasMany(t => t.VkUsers)
+                .WithMany(t => t.VTUsers);
         }
     }
 }

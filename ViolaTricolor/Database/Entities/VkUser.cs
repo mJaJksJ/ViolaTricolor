@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
 namespace ViolaTricolor.Database.Entities
@@ -23,14 +24,22 @@ namespace ViolaTricolor.Database.Entities
         public string Surname { get; set; }
 
         /// <summary>
+        /// VT пользователи подписанные на слежение за этим vk пользователем
+        /// </summary>
+        public IEnumerable<VTUser> VTUsers { get; set; }
+
+        /// <summary>
         /// Настройки
         /// </summary>
         public static void Setup(ModelBuilder modelBuilder)
         {
-            var entity = modelBuilder.Entity<VTUser>();
+            var entity = modelBuilder.Entity<VkUser>();
 
             entity.ToTable("users");
             entity.HasKey(t => t.Id);
+
+            entity.HasMany(t => t.VTUsers)
+                .WithMany(t => t.VkUsers);
         }
     }
 }

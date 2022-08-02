@@ -16,10 +16,15 @@ namespace ViolaTricolor.Database
         /// </summary>
         public DbSet<VkUser> VkUsers { get; set; }
 
+        /// <summary>
+        /// Установить строку подключения
+        /// </summary>
+        public static string ConnectionString { private get; set; }
+
         /// <inheritdoc/>
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("DataSource=Database\\ViolaTricolor.db");
+            optionsBuilder.UseSqlite(ConnectionString);
         }
 
         /// <inheritdoc/>

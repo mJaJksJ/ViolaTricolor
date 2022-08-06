@@ -16,6 +16,6 @@ namespace ViolaTricolor.Services.AuthService
         /// <summary>
         /// Получить основного пользователя
         /// </summary>
-        User GetMainUser { get; }
+        User GetVkUser { get; }
     }
 }

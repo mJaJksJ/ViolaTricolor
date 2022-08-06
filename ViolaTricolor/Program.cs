@@ -39,6 +39,7 @@ DatabaseContext.ConnectionString = $"DataSource={connectionString}";
 var dbContext = new DatabaseContext();
 
 dbContext.Database.Migrate();
+dbContext.CreateAdminUser();
 
 #endregion db
 

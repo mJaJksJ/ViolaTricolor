@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace ViolaTricolor.Database.Entities
@@ -24,9 +25,20 @@ namespace ViolaTricolor.Database.Entities
         public string Password { get; set; }
 
         /// <summary>
+        /// Вк аккаунт
+        /// </summary>
+        [ForeignKey("VkUserId")]
+        public VkUser VkUser { get; set; }
+
+        /// <summary>
+        /// Id Вк аккаунта
+        /// </summary>
+        public long? VkUserId { get; set; }
+
+        /// <summary>
         /// Vk пользователи на слежение за которыми подписанн VT пользователем
         /// </summary>
-        public IEnumerable<VkUser> VkUsers { get; set; }
+        public IEnumerable<VkUser> ObservableVkUsers { get; set; }
 
         /// <summary>
         /// Настройки
@@ -35,14 +47,16 @@ namespace ViolaTricolor.Database.Entities
         {
             var entity = modelBuilder.Entity<VTUser>();
 
-            entity.ToTable("vtusers");
+            entity.ToTable("VTUsers");
             entity.HasKey(t => t.Id);
             entity.Property(u => u.Login).IsRequired();
             entity.Property(u => u.Login).IsRequired();
             entity.HasIndex(u => u.Login).IsUnique();
 
-            entity.HasMany(t => t.VkUsers)
-                .WithMany(t => t.VTUsers);
+            entity.HasMany(u => u.ObservableVkUsers)
+                .WithMany(u => u.ObserverVTUsers);
+
+            entity.HasOne(_ => _.VkUser);
         }
     }
 }

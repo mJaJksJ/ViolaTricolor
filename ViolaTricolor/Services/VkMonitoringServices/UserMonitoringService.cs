@@ -3,8 +3,9 @@ using System.Threading;
 using Serilog;
 using ViolaTricolor.Configuration;
 using ViolaTricolor.Services.VkMonitoringServices.FriendsListUpdateService;
+using ViolaTricolor.VkMonitoringServices;
 
-namespace ViolaTricolor.VkMonitoringServices
+namespace ViolaTricolor.Services.VkMonitoringServices
 {
     /// <inheritdoc cref="IUserMonitoringService"/>
     public class UserMonitoringService : IUserMonitoringService, IDisposable
@@ -68,10 +69,12 @@ namespace ViolaTricolor.VkMonitoringServices
             }
         }
 
+#pragma warning disable IDE0022
         private void RunMonitoring()
         {
             _friendsListUpdateService.CheckFriendsList();
         }
+#pragma warning restore IDE0022
 
         /// <inheritdoc/>
         public void Dispose()

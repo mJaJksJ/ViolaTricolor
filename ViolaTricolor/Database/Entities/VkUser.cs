@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace ViolaTricolor.Database.Entities
@@ -11,7 +12,7 @@ namespace ViolaTricolor.Database.Entities
         /// <summary>
         /// Id
         /// </summary>
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// Имя
@@ -24,9 +25,20 @@ namespace ViolaTricolor.Database.Entities
         public string Surname { get; set; }
 
         /// <summary>
-        /// VT пользователи подписанные на слежение за этим vk пользователем
+        /// VT аккаунт
         /// </summary>
-        public IEnumerable<VTUser> VTUsers { get; set; }
+        [ForeignKey("VtUserId")]
+        public virtual VTUser VtUser { get; set; }
+
+        /// <summary>
+        /// Id VT аккаунта
+        /// </summary>
+        public int? VtUserId { get; set; }
+
+        /// <summary>
+        /// Подписанные на обновления vk пользователя vt пользователи
+        /// </summary>
+        public IEnumerable<VTUser> ObserverVTUsers { get; set; }
 
         /// <summary>
         /// Настройки
@@ -35,11 +47,13 @@ namespace ViolaTricolor.Database.Entities
         {
             var entity = modelBuilder.Entity<VkUser>();
 
-            entity.ToTable("users");
+            entity.ToTable("VkUsers");
             entity.HasKey(t => t.Id);
 
-            entity.HasMany(t => t.VTUsers)
-                .WithMany(t => t.VkUsers);
+            entity.HasMany(u => u.ObserverVTUsers)
+                .WithMany(u => u.ObservableVkUsers);
+
+            entity.HasOne(_ => _.VtUser);
         }
     }
 }

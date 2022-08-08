@@ -31,6 +31,8 @@ namespace ViolaTricolor.Services.VkMonitoringServices.FriendsListUpdateService
         /// <inheritdoc/>
         public void CheckFriendsList()
         {
+            Log.Information("Start CheckFriendsList");
+
             var friends = _vkAuthService.GetVkApi.Friends.Get(new FriendsGetParams { UserId = _vkAuthService.GetVkUser.Id, Fields = ProfileFields.Nickname }).ToDictionary(_ => _.Id);
 
             var curDateTime = DateTime.Now;
@@ -39,7 +41,7 @@ namespace ViolaTricolor.Services.VkMonitoringServices.FriendsListUpdateService
                 .Include(_ => _.FirstFriend)
                 .Include(_ => _.SecondFriend)
                 .Where(_ => _.FirstFriendId == _vkAuthService.GetVkUser.Id || _.SecondFriendId == _vkAuthService.GetVkUser.Id)
-                .Select(_ => _.FirstFriendId == _vkAuthService.GetVkUser.Id ? _.FirstFriend : _.SecondFriend);
+                .Select(_ => _.FirstFriendId == _vkAuthService.GetVkUser.Id ? _.SecondFriend : _.FirstFriend);
 
             var user = _context.VkUsers
                 .Include(_ => _.VtUser)
@@ -115,6 +117,8 @@ namespace ViolaTricolor.Services.VkMonitoringServices.FriendsListUpdateService
                     Log.Information(record.Entity.ToString());
                 }
             }
+
+            Log.Information("Finish CheckFriendsList");
         }
     }
 }

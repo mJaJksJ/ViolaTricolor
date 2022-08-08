@@ -10,6 +10,7 @@ using Serilog.Events;
 using ViolaTricolor.Configuration;
 using ViolaTricolor.Database;
 using ViolaTricolor.Services.AuthService;
+using ViolaTricolor.Services.VkMonitoringServices;
 using ViolaTricolor.Services.VkMonitoringServices.FriendsListUpdateService;
 using ViolaTricolor.VkMonitoringServices;
 

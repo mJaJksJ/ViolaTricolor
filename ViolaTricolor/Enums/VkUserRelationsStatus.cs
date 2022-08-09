@@ -11,18 +11,8 @@ namespace ViolaTricolor.Enums
         Add,
 
         /// <summary>
-        /// Добавил или открыл из скрытых
-        /// </summary>
-        AddOrUnhide,
-
-        /// <summary>
         /// Удалил
         /// </summary>
         Delete,
-
-        /// <summary>
-        /// Удалил или скрыл
-        /// </summary>
-        DeleteOrHide
     }
 }

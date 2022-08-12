@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using ViolaTricolor.Enums;
 
 namespace ViolaTricolor.Api.Controllers.NewsController
 {
@@ -10,14 +11,13 @@ namespace ViolaTricolor.Api.Controllers.NewsController
         /// <summary>
         /// Получить новости
         /// </summary>
-        /// <returns></returns>
         [HttpGet("~/api/news")]
         [ProducesResponseType(typeof(NewsListContract), 201)]
         public IActionResult GetNews()
         {
             return Ok(new NewsListContract
             {
-                NewsContract = new[] { new FriendsListUpdateNew { VkUserRelationsStatus = Enums.VkUserRelationsStatus.Add } }
+                News = new[] { new NewsContract { FriendsListUpdateNew = new FriendsListUpdateNewContract { VkUserRelationsStatus = VkUserRelationsStatus.Add } } }
             });
         }
     }

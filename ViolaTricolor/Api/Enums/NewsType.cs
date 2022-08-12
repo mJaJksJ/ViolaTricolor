@@ -1,4 +1,4 @@
-namespace ViolaTricolor.Api.Controllers.NewsController
+namespace ViolaTricolor.Api.Enums
 {
     /// <summary>
     /// Типы новостей

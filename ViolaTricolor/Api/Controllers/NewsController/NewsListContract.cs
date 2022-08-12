@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace ViolaTricolor.Api.Controllers.NewsController
 {
@@ -10,6 +11,7 @@ namespace ViolaTricolor.Api.Controllers.NewsController
         /// <summary>
         /// Список контрактов новостей
         /// </summary>
-        public IEnumerable<INewsContract> NewsContract { get; set; }
+        [JsonProperty("news")]
+        public IEnumerable<NewsContract> News { get; set; }
     }
 }

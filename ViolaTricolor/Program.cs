@@ -1,10 +1,12 @@
 using System.IO;
 using System.Reflection;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Converters;
 using Serilog;
 using Serilog.Events;
 using ViolaTricolor.Configuration;
@@ -12,6 +14,7 @@ using ViolaTricolor.Database;
 using ViolaTricolor.Services.AuthService;
 using ViolaTricolor.Services.VkMonitoringServices;
 using ViolaTricolor.Services.VkMonitoringServices.FriendsListUpdateService;
+using ViolaTricolor.SwaggerSupport;
 using ViolaTricolor.VkMonitoringServices;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -80,8 +83,13 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
 
 #endregion
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.Converters.Add(new StringEnumConverter());
+    });
 
+builder.Services.AddSwaggerGenNewtonsoftSupport();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
@@ -94,6 +102,9 @@ builder.Services.AddSwaggerGen(c =>
     var xmlName = $"{Path.GetFileNameWithoutExtension(executingLocation)}.xml";
     var xmlPath = Path.Combine(Path.GetDirectoryName(executingLocation), xmlName);
     c.IncludeXmlComments(xmlPath);
+    c.SchemaFilter<EnumTypesSchemaFilter>(xmlPath);
+    c.DocumentFilter<EnumTypesDocumentFilter>();
+    c.CustomOperationIds(e => (e.ActionDescriptor as ControllerActionDescriptor)?.ActionName);
 });
 
 #region services
@@ -122,11 +133,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller}/{action=Index}/{id?}");
-
-app.MapFallbackToFile("index.html");
+app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
 app.Services.GetRequiredService<IVkAuthService>();
 app.Services.GetRequiredService<IUserMonitoringService>().Start();

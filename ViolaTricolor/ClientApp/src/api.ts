@@ -107,6 +107,8 @@ export interface IFriendsListUpdateNewContract {
 export class NewsContract implements INewsContract {
     type?: NewsType;
     friend_list_update?: FriendsListUpdateNewContract;
+    /** Дата и время фиксации */
+    datetime?: Date;
 
     constructor(data?: INewsContract) {
         if (data) {
@@ -121,6 +123,7 @@ export class NewsContract implements INewsContract {
         if (_data) {
             this.type = _data["type"];
             this.friend_list_update = _data["friend_list_update"] ? FriendsListUpdateNewContract.fromJS(_data["friend_list_update"]) : <any>undefined;
+            this.datetime = _data["datetime"] ? new Date(_data["datetime"].toString()) : <any>undefined;
         }
     }
 
@@ -135,6 +138,7 @@ export class NewsContract implements INewsContract {
         data = typeof data === 'object' ? data : {};
         data["type"] = this.type;
         data["friend_list_update"] = this.friend_list_update ? this.friend_list_update.toJSON() : <any>undefined;
+        data["datetime"] = this.datetime ? this.datetime.toISOString() : <any>undefined;
         return data;
     }
 }
@@ -143,6 +147,8 @@ export class NewsContract implements INewsContract {
 export interface INewsContract {
     type?: NewsType;
     friend_list_update?: FriendsListUpdateNewContract;
+    /** Дата и время фиксации */
+    datetime?: Date;
 }
 
 /** Список контрактов новостей */

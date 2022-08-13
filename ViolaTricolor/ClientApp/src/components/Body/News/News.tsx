@@ -3,6 +3,7 @@ import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import { NewsContract, ApiViolaTricolor } from "../../../api";
+import NewsComponent from "./Contracts/NewsComponent";
 
 const News: React.FC = () => {
     const api = useRef(new ApiViolaTricolor());
@@ -11,18 +12,18 @@ const News: React.FC = () => {
     useEffect(() => {
         api.current.getNews()
             .then(n => {
-                console.log('nn')
-                setNews(() => n.news ?? [])
+                setNews((prev) => n.news ?? prev)
             })
             .catch(e => {
-                console.log('err')
-                setNews(() => [new NewsContract(), new NewsContract(),])
+                console.log(e)
             })
-    }, [])
+    }, []);
 
     return (
         <>
-            {news.map(_ => <div key={new Date().getTime()}>q</div>)}
+            {news.map((n, i, arr) => {
+                return <NewsComponent {...arr[arr.length - 1 - i]} key={i} />
+            })}
         </>
     );
 }

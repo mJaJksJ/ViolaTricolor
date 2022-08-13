@@ -1,4 +1,6 @@
+using System.Globalization;
 using Newtonsoft.Json;
+using ViolaTricolor.Database.Entities;
 
 namespace ViolaTricolor.Api.Contracts
 {
@@ -24,5 +26,15 @@ namespace ViolaTricolor.Api.Contracts
         /// </summary>
         [JsonProperty("id")]
         public string Id { get; set; }
+
+        /// <summary>
+        /// .ctor
+        /// </summary>
+        public VkUserContract(VkUser user)
+        {
+            Id = user.Id.ToString(CultureInfo.InvariantCulture);
+            Name = user.Name;
+            Surname = user.Surname;
+        }
     }
 }

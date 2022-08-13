@@ -1,3 +1,4 @@
+using System;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using ViolaTricolor.Api.Controllers.NewsController.Contracts;
@@ -22,5 +23,11 @@ namespace ViolaTricolor.Api.Controllers.NewsController
         /// </summary>
         [JsonProperty("friend_list_update")]
         public FriendsListUpdateNewContract FriendsListUpdateNew { get; set; }
+
+        /// <summary>
+        /// Дата и время фиксации
+        /// </summary>
+        [JsonProperty("datetime")]
+        public DateTime DateTime { get; set; }
     }
 }

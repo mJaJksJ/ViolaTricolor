@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using ViolaTricolor.Api.Contracts;
 using ViolaTricolor.Enums;
 
-namespace ViolaTricolor.Api.Controllers.NewsController
+namespace ViolaTricolor.Api.Controllers.NewsController.Contracts
 {
     /// <summary>
     /// Новость обновления списков друзей

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using ViolaTricolor.Api.Controllers.NewsController.Contracts;
 using ViolaTricolor.Enums;
 
 namespace ViolaTricolor.Api.Controllers.NewsController
@@ -12,7 +13,7 @@ namespace ViolaTricolor.Api.Controllers.NewsController
         /// Получить новости
         /// </summary>
         [HttpGet("~/api/news")]
-        [ProducesResponseType(typeof(NewsListContract), 201)]
+        [ProducesResponseType(typeof(NewsListContract), 200)]
         public IActionResult GetNews()
         {
             return Ok(new NewsListContract

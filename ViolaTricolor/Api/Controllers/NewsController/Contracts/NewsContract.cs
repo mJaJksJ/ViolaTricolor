@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using Newtonsoft.Json;
+using ViolaTricolor.Api.Controllers.NewsController.Contracts;
 using ViolaTricolor.Api.Enums;
 
 namespace ViolaTricolor.Api.Controllers.NewsController

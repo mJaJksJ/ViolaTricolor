@@ -20,7 +20,7 @@ export class ApiViolaTricolor {
 
     /**
      * Получить новости
-     * @return Created
+     * @return Success
      */
     getNews(): Promise<NewsListContract> {
         let url_ = this.baseUrl + "/api/news";
@@ -41,12 +41,12 @@ export class ApiViolaTricolor {
     protected processGetNews(response: Response): Promise<NewsListContract> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 201) {
+        if (status === 200) {
             return response.text().then((_responseText) => {
-            let result201: any = null;
-            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result201 = NewsListContract.fromJS(resultData201);
-            return result201;
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = NewsListContract.fromJS(resultData200);
+            return result200;
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {

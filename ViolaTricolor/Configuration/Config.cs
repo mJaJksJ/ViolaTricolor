@@ -21,6 +21,11 @@ namespace ViolaTricolor.Configuration
         public VkMonitoringConfig VkMonitoring { get; set; }
 
         /// <summary>
+        /// Конфиг авторизации
+        /// </summary>
+        public AuthConfig AuthConfig { get; set; }
+
+        /// <summary>
         /// Файл бд
         /// </summary>
         public string DbFileName { get; set; }
@@ -48,6 +53,7 @@ namespace ViolaTricolor.Configuration
             var currentConfig = config as Config;
             Logger.MergeWith(currentConfig.Logger);
             VkMonitoring.MergeWith(currentConfig.VkMonitoring);
+            AuthConfig.MergeWith(currentConfig.AuthConfig);
             DbFileName = !string.IsNullOrEmpty(currentConfig.DbFileName) ? currentConfig.DbFileName : DbFileName;
         }
 
@@ -56,7 +62,11 @@ namespace ViolaTricolor.Configuration
             var config = new Config
             {
                 Logger = new LoggerConfig(),
-                VkMonitoring = new VkMonitoringConfig()
+                VkMonitoring = new VkMonitoringConfig(),
+                AuthConfig = new AuthConfig
+                {
+                    JwtSecurityKey = Array.Empty<byte>()
+                }
             };
 
             foreach (var c in configs.Where(_ => _ != null))
@@ -83,7 +93,11 @@ namespace ViolaTricolor.Configuration
                 var config = new Config
                 {
                     Logger = new LoggerConfig(),
-                    VkMonitoring = new VkMonitoringConfig()
+                    VkMonitoring = new VkMonitoringConfig(),
+                    AuthConfig = new AuthConfig
+                    {
+                        JwtSecurityKey = Array.Empty<byte>()
+                    }
                 };
 
                 var json = File.ReadAllText(path, Encoding.UTF8);
@@ -115,6 +129,13 @@ namespace ViolaTricolor.Configuration
                     Interval = new TimeSpan(0, 30, 0),
                     ServiceAccessKey = "",
                     MainUserId = null
+                },
+                AuthConfig = new AuthConfig
+                {
+                    JwtIssuer = "mj_issuer",
+                    JwtAudience = "mj_issuer",
+                    JwtLifetimeSeconds = 7 * 24 * 60 * 60,
+                    JwtSecurityKey = Encoding.ASCII.GetBytes("8u5j4WXfR74kDGE38k32zIBrLuDELjSTGzTx97OWwVY01-0uaayMdBlBWfZ55Fy8")
                 },
                 DbFileName = "ViolaTricolor.db"
             };

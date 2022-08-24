@@ -5,6 +5,7 @@ import "primeicons/primeicons.css";
 import { INewsContract, NewsType } from "../../../../api";
 import FriendsListUpdate from "./FriendsListUpdate";
 import { Card } from 'primereact/card';
+import { formatDateTime } from "../../../../formatters";
 
 const NewsComponent: React.FC<INewsContract> = (props) => {
     const cardContent = (props: INewsContract): any => {
@@ -15,12 +16,11 @@ const NewsComponent: React.FC<INewsContract> = (props) => {
             default:
                 return <div></div>
         }
-
     }
 
     return (
         <>
-            <Card title={props.type} subTitle={props.datetime?.toISOString()}>
+            <Card title={props.type} subTitle={formatDateTime(props.datetime)} style={{ width: '50%' }}>
                 {cardContent(props)}
             </Card>
             <br />

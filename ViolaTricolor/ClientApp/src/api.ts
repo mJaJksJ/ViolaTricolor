@@ -19,6 +19,130 @@ export class ApiViolaTricolor {
     }
 
     /**
+     * Вход в учетную запись
+     * @param body (optional) Запрос авторизации
+     * @return Success
+     */
+    authorize(body: AuthRequest | undefined): Promise<AuthResponse> {
+        let url_ = this.baseUrl + "/api/authorize/login";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processAuthorize(_response);
+        });
+    }
+
+    protected processAuthorize(response: Response): Promise<AuthResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuthResponse.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<AuthResponse>(null as any);
+    }
+
+    /**
+     * Выход из учетной записи
+     * @return Success
+     */
+    logOut(): Promise<OkResult> {
+        let url_ = this.baseUrl + "/api/authorize/logout";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "POST",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processLogOut(_response);
+        });
+    }
+
+    protected processLogOut(response: Response): Promise<OkResult> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = OkResult.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<OkResult>(null as any);
+    }
+
+    /**
+     * Изменить пароль
+     * @param body (optional) Контракт изменения пароля
+     * @return Success
+     */
+    changePassword(body: ChangePasswordContract | undefined): Promise<OkResult> {
+        let url_ = this.baseUrl + "/api/authorize/change-password";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json-patch+json",
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processChangePassword(_response);
+        });
+    }
+
+    protected processChangePassword(response: Response): Promise<OkResult> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = OkResult.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<OkResult>(null as any);
+    }
+
+    /**
      * Получить новости
      * @return Success
      */
@@ -55,6 +179,188 @@ export class ApiViolaTricolor {
         }
         return Promise.resolve<NewsListContract>(null as any);
     }
+}
+
+/** Запрос авторизации */
+export class AuthRequest implements IAuthRequest {
+    /** Логин */
+    login!: string;
+    /** Пароль */
+    password!: string;
+
+    constructor(data?: IAuthRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.login = _data["login"];
+            this.password = _data["password"];
+        }
+    }
+
+    static fromJS(data: any): AuthRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuthRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["login"] = this.login;
+        data["password"] = this.password;
+        return data;
+    }
+}
+
+/** Запрос авторизации */
+export interface IAuthRequest {
+    /** Логин */
+    login: string;
+    /** Пароль */
+    password: string;
+}
+
+/** Ответ авторизации */
+export class AuthResponse implements IAuthResponse {
+    /** Id VT пользователя */
+    vt_user_id?: string | undefined;
+    /** Id Vk пользователя */
+    vk_user_id?: string | undefined;
+    /** Никнейм VT пользователя */
+    username?: string | undefined;
+    /** Токен */
+    token?: string | undefined;
+    /** Тип токена */
+    token_type?: string | undefined;
+    /** Срок действия токена */
+    validity_period?: Date;
+    /** Роль */
+    roles?: string[] | undefined;
+
+    constructor(data?: IAuthResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.vt_user_id = _data["vt_user_id"];
+            this.vk_user_id = _data["vk_user_id"];
+            this.username = _data["username"];
+            this.token = _data["token"];
+            this.token_type = _data["token_type"];
+            this.validity_period = _data["validity_period"] ? new Date(_data["validity_period"].toString()) : <any>undefined;
+            if (Array.isArray(_data["roles"])) {
+                this.roles = [] as any;
+                for (let item of _data["roles"])
+                    this.roles!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): AuthResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuthResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["vt_user_id"] = this.vt_user_id;
+        data["vk_user_id"] = this.vk_user_id;
+        data["username"] = this.username;
+        data["token"] = this.token;
+        data["token_type"] = this.token_type;
+        data["validity_period"] = this.validity_period ? this.validity_period.toISOString() : <any>undefined;
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item);
+        }
+        return data;
+    }
+}
+
+/** Ответ авторизации */
+export interface IAuthResponse {
+    /** Id VT пользователя */
+    vt_user_id?: string | undefined;
+    /** Id Vk пользователя */
+    vk_user_id?: string | undefined;
+    /** Никнейм VT пользователя */
+    username?: string | undefined;
+    /** Токен */
+    token?: string | undefined;
+    /** Тип токена */
+    token_type?: string | undefined;
+    /** Срок действия токена */
+    validity_period?: Date;
+    /** Роль */
+    roles?: string[] | undefined;
+}
+
+/** Контракт изменения пароля */
+export class ChangePasswordContract implements IChangePasswordContract {
+    /** Логин */
+    login?: string | undefined;
+    /** Старый пароль */
+    password?: string | undefined;
+    /** Новый пароль */
+    new_password?: string | undefined;
+
+    constructor(data?: IChangePasswordContract) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.login = _data["login"];
+            this.password = _data["password"];
+            this.new_password = _data["new_password"];
+        }
+    }
+
+    static fromJS(data: any): ChangePasswordContract {
+        data = typeof data === 'object' ? data : {};
+        let result = new ChangePasswordContract();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["login"] = this.login;
+        data["password"] = this.password;
+        data["new_password"] = this.new_password;
+        return data;
+    }
+}
+
+/** Контракт изменения пароля */
+export interface IChangePasswordContract {
+    /** Логин */
+    login?: string | undefined;
+    /** Старый пароль */
+    password?: string | undefined;
+    /** Новый пароль */
+    new_password?: string | undefined;
 }
 
 /** Новость обновления списков друзей */
@@ -202,6 +508,42 @@ export interface INewsListContract {
 /** Типы новостей<p>Значения:</p><ul><li><i>FriendsListUpdate</i> - Обновление списка друзей</li></ul> */
 export enum NewsType {
     FriendsListUpdate = "FriendsListUpdate",
+}
+
+export class OkResult implements IOkResult {
+    statusCode?: number;
+
+    constructor(data?: IOkResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.statusCode = _data["statusCode"];
+        }
+    }
+
+    static fromJS(data: any): OkResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new OkResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["statusCode"] = this.statusCode;
+        return data;
+    }
+}
+
+export interface IOkResult {
+    statusCode?: number;
 }
 
 /** Контракт Вк пользователя */

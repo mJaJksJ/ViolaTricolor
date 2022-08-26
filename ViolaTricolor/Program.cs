@@ -114,6 +114,7 @@ builder.Services.AddSingleton(dbContext);
 builder.Services.AddSingleton<IVkAuthService, VkAuthService>();
 builder.Services.AddSingleton<IFriendsListUpdateService, FriendsListUpdateService>();
 builder.Services.AddSingleton<IUserMonitoringService, UserMonitoringService>();
+builder.Services.AddSingleton<IAuthService, AuthService>();
 
 #endregion services
 

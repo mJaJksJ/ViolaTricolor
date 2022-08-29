@@ -1,10 +1,14 @@
 import { MenuItem } from "primereact/menuitem";
-
+import { Link } from "react-router-dom";
 export const MenuItems: MenuItem[] = [
     {
         label: 'Лента',
         icon: 'pi pi-fw pi-images',
-        command: () => { window.location.href = "/news"; }
+        template: (item, options) => {
+            return (
+                <Link className={options.className} to={'/news'}>{item.label}</Link>
+            )
+        }
     },
     {
         label: 'Аккаунт',
@@ -13,7 +17,11 @@ export const MenuItems: MenuItem[] = [
             {
                 label: 'Страница',
                 icon: 'pi pi-fw pi-home',
-                command: () => { window.location.href = "/"; }
+                template: (item, options) => {
+                    return (
+                        <Link className={options.className} to={'/'}>{item.label}</Link>
+                    )
+                }
             },
             {
                 separator: true

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import { LOCAL_STORAGE_TOKEN } from "../../constsAndDicts/localStorageConsts";
 import { useAuthContext } from "../../contexts/AuthContext";
 import { privateRoutes, publicRoutes } from "../../router";
@@ -27,7 +27,6 @@ const AppRouter: React.FC = () => {
                             key={route.path}
                         />
                     )}
-                    <Redirect to='/' />
                 </Switch>
             </>
 
@@ -41,7 +40,6 @@ const AppRouter: React.FC = () => {
                             key={route.path}
                         />
                     )}
-                    <Redirect to='/' />
                 </Switch>
             </>
     );

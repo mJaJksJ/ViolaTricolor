@@ -1,16 +1,6 @@
-interface IMenuItem {
-    label: string;
-    icon?: string;
-    items?: Array<IMenuItem | IMenuItemSeparator>;
-    command?: () => void;
-    template?: any;
-}
+import { MenuItem } from "primereact/menuitem";
 
-interface IMenuItemSeparator {
-    separator: boolean;
-}
-
-export const MenuItems: (IMenuItem | IMenuItemSeparator)[] = [
+export const MenuItems: MenuItem[] = [
     {
         label: 'Лента',
         icon: 'pi pi-fw pi-images',

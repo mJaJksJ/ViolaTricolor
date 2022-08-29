@@ -4,7 +4,7 @@ export const MenuItems: MenuItem[] = [
     {
         label: 'Лента',
         icon: 'pi pi-fw pi-images',
-        command: () => { window.location.pathname = "/news"; }
+        command: () => { window.location.href = "/news"; }
     },
     {
         label: 'Аккаунт',
@@ -13,7 +13,7 @@ export const MenuItems: MenuItem[] = [
             {
                 label: 'Страница',
                 icon: 'pi pi-fw pi-home',
-                command: () => { window.location.pathname = "/"; }
+                command: () => { window.location.href = "/"; }
             },
             {
                 separator: true

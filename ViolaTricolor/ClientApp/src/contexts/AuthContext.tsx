@@ -1,15 +1,14 @@
 import React, { useContext } from "react";
 import { createContext, useState } from "react"
-import { AuthInfoContract } from "../api"
 
 interface IAuthInfoContent {
-    contract: AuthInfoContract;
-    setContract: (authInfoContract: AuthInfoContract) => void;
+    isAuthorized: boolean;
+    setIsAuthorized: (isAuthorized: boolean | ((isAuthorized: boolean) => boolean)) => void;
 }
 
 const defaultValue: IAuthInfoContent = {
-    contract: { is_authorized: false, } as AuthInfoContract,
-    setContract: () => { }
+    isAuthorized: false,
+    setIsAuthorized: () => { }
 };
 
 interface IAuthContext {
@@ -19,10 +18,10 @@ interface IAuthContext {
 const AuthContext = createContext<IAuthInfoContent>(defaultValue);
 
 export const AuthContextProvider: React.FC<IAuthContext> = (props) => {
-    const [authInfo, setAuthInfo] = useState<AuthInfoContract>(defaultValue.contract);
+    const [isAuth, setIsAuth] = useState<boolean>(defaultValue.isAuthorized);
     const contract: IAuthInfoContent = {
-        contract: authInfo,
-        setContract: (authInfoContract: AuthInfoContract) => { setAuthInfo(authInfoContract) }
+        isAuthorized: isAuth,
+        setIsAuthorized: (isAuth: boolean | ((isAuth: boolean) => boolean)) => { setIsAuth(isAuth) }
     }
 
     return (
@@ -35,20 +34,3 @@ export const AuthContextProvider: React.FC<IAuthContext> = (props) => {
 export const useAuthContext = () => {
     return useContext(AuthContext);
 }
-
-
-
-
-/*export const AuthContext = createContext<[AuthInfoContract | undefined, () => void]>([{
-    is_authorized: false,
-} as AuthInfoContract, Dispatch<React.SetStateAction<AuthInfoContract | undefined>>])
-
-export const AuthContextProvider = (children: React.FC) => {
-    const authInfoState = useState<AuthInfoContract>();
-
-    return (
-        <AuthContext.Provider value={authInfoState}>
-            {children}
-        </AuthContext.Provider>
-    )
-}*/

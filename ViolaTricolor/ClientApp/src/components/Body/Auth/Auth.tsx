@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
@@ -6,7 +6,9 @@ import { Password } from 'primereact/password';
 import { Divider } from 'primereact/divider';
 import { classNames } from 'primereact/utils';
 import './Auth.css';
-import { IAuthRequest } from '../../../api';
+import { ApiViolaTricolor, AuthRequest, IAuthRequest } from '../../../api';
+import { LOCAL_STORAGE_ROLES, LOCAL_STORAGE_TOKEN, LOCAL_STORAGE_TOKEN_TYPE, LOCAL_STORAGE_USERNAME, LOCAL_STORAGE_VALIDITY_PERIOD, LOCAL_STORAGE_VK_USER_ID, LOCAL_STORAGE_VT_USER_ID } from '../../../constsAndDicts/localStorageConsts';
+import { useAuthContext } from '../../../contexts/AuthContext';
 
 const Auth: React.FC = () => {
     const requiredMessage: string = 'Обязательное поле';
@@ -14,11 +16,30 @@ const Auth: React.FC = () => {
         login: '',
         password: '',
     }
-
+    const api = useRef(new ApiViolaTricolor());
     const { control, formState: { errors }, handleSubmit, reset } = useForm({ defaultValues });
+    const [formDisabled, setFormDisabled] = useState<boolean>(false);
+    const authContext = useAuthContext();
 
     const onSubmit = (data: IAuthRequest) => {
-        console.log(data);
+        setFormDisabled(true);
+
+        api.current.authorize(data as AuthRequest)
+            .then(response => {
+                localStorage.setItem(LOCAL_STORAGE_ROLES, response.roles?.toString());
+                localStorage.setItem(LOCAL_STORAGE_TOKEN, response.token);
+                localStorage.setItem(LOCAL_STORAGE_TOKEN_TYPE, response.token_type);
+                localStorage.setItem(LOCAL_STORAGE_USERNAME, response.username);
+                localStorage.setItem(LOCAL_STORAGE_VALIDITY_PERIOD, response.validity_period.toISOString());
+                localStorage.setItem(LOCAL_STORAGE_VK_USER_ID, response.vk_user_id);
+                localStorage.setItem(LOCAL_STORAGE_VT_USER_ID, response.vt_user_id);
+                authContext.setIsAuthorized(true)
+            })
+            .catch(error => {
+                alert(error)
+            })
+
+        setFormDisabled(false);
         reset();
     };
 
@@ -49,7 +70,7 @@ const Auth: React.FC = () => {
                         <div className="field">
                             <span className="p-float-label">
                                 <Controller name="login" control={control} rules={{ required: requiredMessage }} render={({ field, fieldState }) => (
-                                    <InputText id={field.name} {...field} autoFocus className={classNames({ 'p-invalid': fieldState.invalid })} />
+                                    <InputText disabled={formDisabled} id={field.name} {...field} autoFocus className={classNames({ 'p-invalid': fieldState.invalid })} />
                                 )} />
                                 <label htmlFor="login" className={classNames({ 'p-error': errors.login })}>Логин*</label>
                             </span>
@@ -58,7 +79,7 @@ const Auth: React.FC = () => {
                         <div className="field">
                             <span className="p-float-label">
                                 <Controller name="password" control={control} rules={{ required: requiredMessage }} render={({ field, fieldState }) => (
-                                    <Password id={field.name} {...field} toggleMask className={classNames({ 'p-invalid': fieldState.invalid })} header={passwordHeader} footer={passwordFooter} />
+                                    <Password disabled={formDisabled} id={field.name} {...field} toggleMask className={classNames({ 'p-invalid': fieldState.invalid })} header={passwordHeader} footer={passwordFooter} />
                                 )} />
                                 <label htmlFor="password" className={classNames({ 'p-error': errors.password })}>Пароль*</label>
                             </span>

@@ -102,20 +102,5 @@ namespace NSD.TransitAgent.API.Controllers.Authorization
             _authService.ChangePassword(contract);
             return Ok();
         }
-
-        /// <summary>
-        /// Получить авторизационную информацию
-        /// </summary>
-        [HttpGet("~/api/authorize/info"), AllowAnonymous]
-        [ProducesResponseType(typeof(AuthInfoContract), 200)]
-        public IActionResult GetAuthInfo()
-        {
-            var result = new AuthInfoContract
-            {
-                IsAuthorized = User.Identity.IsAuthenticated
-            };
-
-            return Ok(result);
-        }
     }
 }

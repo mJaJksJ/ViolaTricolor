@@ -65,7 +65,10 @@ namespace ViolaTricolor.Services.VkMonitoringServices.FriendsListUpdateService
                     (_.FirstFriendId == user.Id && _.SecondFriendId == oldFriend.Id) ||
                     (_.FirstFriendId == oldFriend.Id && _.SecondFriendId == user.Id));
 
-                    _context.Remove(deletingFriends);
+                    foreach(var friend in deletingFriends)
+                    {
+                        _context.VkFriends.Remove(friend);
+                    }
 
                     _context.SaveChanges();
                     Log.Information(record.Entity.ToString());

@@ -1,5 +1,7 @@
 import { MenuItem } from "primereact/menuitem";
 import { Link } from "react-router-dom";
+import LogOut from "../Body/Auth/LogOut";
+
 export const MenuItems: MenuItem[] = [
     {
         label: 'Лента',
@@ -29,6 +31,11 @@ export const MenuItems: MenuItem[] = [
             {
                 label: 'Выход',
                 icon: 'pi pi-fw pi-sign-out',
+                template: (item, options) => {
+                    return (
+                        <LogOut className={options.className}>{item.label}</LogOut>
+                    )
+                }
             },
         ]
     }

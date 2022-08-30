@@ -1,4 +1,5 @@
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ViolaTricolor.Api.Contracts;
 using ViolaTricolor.Api.Controllers.NewsController.Contracts;
@@ -24,6 +25,7 @@ namespace ViolaTricolor.Api.Controllers.NewsController
         /// <summary>
         /// Получить новости
         /// </summary>
+        [Authorize]
         [HttpGet("~/api/news")]
         [ProducesResponseType(typeof(NewsListContract), 200)]
         public IActionResult GetNews()

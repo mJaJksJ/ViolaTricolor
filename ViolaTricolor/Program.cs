@@ -1,10 +1,15 @@
+using System;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using Serilog;
@@ -89,6 +94,55 @@ builder.Services.AddControllers()
         options.SerializerSettings.Converters.Add(new StringEnumConverter());
     });
 
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(config.AuthConfig.JwtSecurityKey),
+
+            ValidateIssuer = true,
+            ValidIssuer = config.AuthConfig.JwtIssuer,
+
+            ValidateAudience = true,
+            ValidAudience = config.AuthConfig.JwtAudience,
+
+            RequireExpirationTime = true,
+            ValidateLifetime = true,
+
+            ClockSkew = TimeSpan.FromMinutes(1)
+        };
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = _ =>
+            {
+                if (string.IsNullOrEmpty(_.Token))
+                {
+                    var fromAuth = _.Request.Query["auth"];
+                    if (!string.IsNullOrEmpty(fromAuth))
+                        _.Token = fromAuth;
+
+                    var fromAccessToken = _.Request.Query["access_token"];
+                    if (!string.IsNullOrEmpty(fromAccessToken))
+                        _.Token = fromAccessToken;
+                }
+
+                return Task.CompletedTask;
+            }
+        };
+    });
+
+builder.Services.AddAuthorization(
+    options =>
+    {
+        options.DefaultPolicy = new AuthorizationPolicyBuilder()
+            .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+            .RequireAuthenticatedUser()
+            .Build();
+    });
+
 builder.Services.AddSwaggerGenNewtonsoftSupport();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -134,6 +188,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
 app.Services.GetRequiredService<IVkAuthService>();

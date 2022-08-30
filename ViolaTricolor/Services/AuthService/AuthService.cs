@@ -36,7 +36,7 @@ namespace ViolaTricolor.Services.AuthService
                 .Include(_ => _.VkUser)
                 .SingleOrDefault(u => u.Login.ToLower() == request.Login.ToLower());
 
-            if(user.Login != "admin")
+            if (user.Login != "admin")
             {
                 if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
                 {

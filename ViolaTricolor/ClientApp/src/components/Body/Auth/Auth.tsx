@@ -7,8 +7,8 @@ import { Divider } from 'primereact/divider';
 import { classNames } from 'primereact/utils';
 import './Auth.css';
 import { ApiViolaTricolor, AuthRequest, IAuthRequest } from '../../../api';
-import { LOCAL_STORAGE_ROLES, LOCAL_STORAGE_TOKEN, LOCAL_STORAGE_TOKEN_TYPE, LOCAL_STORAGE_USERNAME, LOCAL_STORAGE_VALIDITY_PERIOD, LOCAL_STORAGE_VK_USER_ID, LOCAL_STORAGE_VT_USER_ID } from '../../../constsAndDicts/localStorageConsts';
 import { useAuthContext } from '../../../contexts/AuthContext';
+import { AuthService } from '../../../services/auth.service';
 
 const Auth: React.FC = () => {
     const requiredMessage: string = 'Обязательное поле';
@@ -17,24 +17,16 @@ const Auth: React.FC = () => {
         password: '',
     }
     const api = useRef(new ApiViolaTricolor());
+    const authContext = useAuthContext();
+    const authService = new AuthService();
     const { control, formState: { errors }, handleSubmit, reset } = useForm({ defaultValues });
     const [formDisabled, setFormDisabled] = useState<boolean>(false);
-    const authContext = useAuthContext();
 
     const onSubmit = (data: IAuthRequest) => {
         setFormDisabled(true);
 
         api.current.authorize(data as AuthRequest)
-            .then(response => {
-                localStorage.setItem(LOCAL_STORAGE_ROLES, response.roles?.toString());
-                localStorage.setItem(LOCAL_STORAGE_TOKEN, response.token);
-                localStorage.setItem(LOCAL_STORAGE_TOKEN_TYPE, response.token_type);
-                localStorage.setItem(LOCAL_STORAGE_USERNAME, response.username);
-                localStorage.setItem(LOCAL_STORAGE_VALIDITY_PERIOD, response.validity_period.toISOString());
-                localStorage.setItem(LOCAL_STORAGE_VK_USER_ID, response.vk_user_id);
-                localStorage.setItem(LOCAL_STORAGE_VT_USER_ID, response.vt_user_id);
-                authContext.setIsAuthorized(true)
-            })
+            .then(response => authService.auth(response, authContext))
             .catch(error => {
                 alert(error)
             })

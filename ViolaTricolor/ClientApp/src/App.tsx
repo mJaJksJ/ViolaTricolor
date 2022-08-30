@@ -7,7 +7,6 @@ import { AuthContextProvider } from "./contexts/AuthContext";
 import AppRouter from "./components/AppRouter/AppRouter";
 
 const App: React.FC = () => {
-
   return (
     <BrowserRouter>
       <AuthContextProvider>

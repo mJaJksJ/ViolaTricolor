@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
 import { LOCAL_STORAGE_TOKEN } from "../../constsAndDicts/localStorageConsts";
 import { useAuthContext } from "../../contexts/AuthContext";
-import { privateRoutes, publicRoutes } from "../../router";
+import { privateRoutes, publicRoutes } from "./router";
 import Header from "../Header/Header";
 
 const AppRouter: React.FC = () => {

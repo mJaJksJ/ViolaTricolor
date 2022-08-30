@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { createContext, useState } from "react"
 
-interface IAuthInfoContent {
+export interface IAuthInfoContent {
     isAuthorized: boolean;
     setIsAuthorized: (isAuthorized: boolean | ((isAuthorized: boolean) => boolean)) => void;
 }
